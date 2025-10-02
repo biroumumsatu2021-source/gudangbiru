@@ -1,0 +1,10 @@
+{
+  "placeholderImages": [
+    {
+      "id": "gudang-biru-logo",
+      "description": "Gudang Biru Logo",
+      "imageUrl": "https://images.unsplash.com/photo-1701551611887-0d5f7fd0aee0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3YXJlaG91c2UlMjBsb2dvfGVufDB8fHx8MTc1OTEwNjMyNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "warehouse logo"
+    }
+  ]
+}

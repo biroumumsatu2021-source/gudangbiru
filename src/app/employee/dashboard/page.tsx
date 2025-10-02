@@ -101,15 +101,42 @@ function RequestForm({ onProposalSubmitted, stockData }: { onProposalSubmitted: 
 
 
   // Get unique item types from current stock for the dropdown
-  const availableItemTypes = Array.from(new Set(stockInSelectedWarehouse.map(item => item.itemType)))
-        .map(type => ({ name: type }));
+  // If no stock data exists, use the default item types as fallback
+  const availableItemTypes = stockInSelectedWarehouse.length > 0 
+    ? Array.from(new Set(stockInSelectedWarehouse.map(item => item.itemType)))
+        .map(type => ({ name: type }))
+    : initialStockData.length > 0 
+      ? Array.from(new Set(initialStockData.map(item => item.itemType)))
+        .map(type => ({ name: type }))
+      : itemTypes.map(it => ({ name: it.name }));
 
   // Get available brands for a selected item type from stock
+  // If no stock exists, return empty array or brands from initial data
   const getBrandsForItemType = (itemType: string) => {
-      return Array.from(new Set(stockInSelectedWarehouse
+      const brandsFromCurrentStock = Array.from(new Set(stockInSelectedWarehouse
           .filter(item => item.itemType === itemType && item.quantity > 0)
           .map(item => item.brand)
       ));
+      
+      // If no brands found in current stock and it's an existing item type, try to get from initial stock
+      if (brandsFromCurrentStock.length === 0) {
+          const brandsFromInitialStock = Array.from(new Set(initialStockData
+              .filter(item => item.itemType === itemType && item.quantity > 0)
+              .map(item => item.brand)
+          ));
+          
+          // If still no brands and the item type exists in default itemTypes, we can provide a fallback
+          if (brandsFromInitialStock.length === 0) {
+              // Return brands that are typically associated with this item type, if any
+              const defaultBrands = Array.from(new Set(stockData
+                  .filter(item => item.itemType === itemType)
+                  .map(item => item.brand)
+              ));
+              return defaultBrands.length > 0 ? defaultBrands : [];
+          }
+          return brandsFromInitialStock;
+      }
+      return brandsFromCurrentStock;
   };
 
 
